@@ -64,7 +64,7 @@ pub trait Fs: Send + Sync {
         latency: Duration,
     ) -> Pin<Box<dyn Send + Stream<Item = Vec<Event>>>>;
 
-    fn open_repo(&self, abs_dot_git: &Path) -> Option<Arc<Mutex<dyn GitRepository>>>;
+    fn open_repo(&self, abs_dot_git: &Path) -> Option<Arc<Mutex<Box<dyn GitRepository>>>>;
     fn is_fake(&self) -> bool;
     #[cfg(any(test, feature = "test-support"))]
     fn as_fake(&self) -> &FakeFs;
@@ -328,12 +328,10 @@ impl Fs for RealFs {
         Box::pin(rx)
     }
 
-    fn open_repo(&self, dotgit_path: &Path) -> Option<Arc<Mutex<dyn GitRepository>>> {
+    fn open_repo(&self, dotgit_path: &Path) -> Option<Arc<Mutex<Box<dyn GitRepository>>>> {
         LibGitRepository::open(&dotgit_path)
             .log_err()
-            .and_then::<Arc<Mutex<dyn GitRepository>>, _>(|libgit_repository| {
-                Some(Arc::new(Mutex::new(libgit_repository)))
-            })
+            .map(|libgit_repository| Arc::new(Mutex::new(Box::new(libgit_repository))))
     }
 
     fn is_fake(&self) -> bool {
@@ -666,7 +664,7 @@ impl FakeFs {
             state.worktree_statuses.extend(
                 statuses
                     .iter()
-                    .map(|(path, content)| ((**path).into(), content.clone())),
+                    .map(|(path, content)| (path.to_owned().into(), content.clone())),
             );
         });
         self.state.lock().emit_event(
@@ -686,7 +684,7 @@ impl FakeFs {
             state.worktree_statuses.extend(
                 statuses
                     .iter()
-                    .map(|(path, content)| ((**path).into(), content.clone())),
+                    .map(|(path, content)| (path.to_owned().into(), content.clone())),
             );
         });
     }
@@ -1168,7 +1166,7 @@ impl Fs for FakeFs {
         }))
     }
 
-    fn open_repo(&self, abs_dot_git: &Path) -> Option<Arc<Mutex<dyn GitRepository>>> {
+    fn open_repo(&self, abs_dot_git: &Path) -> Option<Arc<Mutex<Box<dyn GitRepository>>>> {
         let state = self.state.lock();
         let entry = state.read_path(abs_dot_git).unwrap();
         let mut entry = entry.lock();

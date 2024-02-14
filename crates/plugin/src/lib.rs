@@ -40,11 +40,21 @@ pub extern "C" fn __free_buffer(buffer: u64) {
 }
 
 impl __Buffer {
+    /// .
+    ///
+    /// # Safety
+    ///
+    /// .
     #[inline(always)]
     pub unsafe fn to_vec(&self) -> Vec<u8> {
         core::slice::from_raw_parts(self.ptr as *const u8, self.len as usize).to_vec()
     }
 
+    /// .
+    ///
+    /// # Safety
+    ///
+    /// .
     #[inline(always)]
     pub unsafe fn from_vec(mut vec: Vec<u8>) -> __Buffer {
         vec.shrink_to(0);

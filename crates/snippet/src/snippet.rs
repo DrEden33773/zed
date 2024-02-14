@@ -1,3 +1,5 @@
+#![allow(clippy::single_range_in_vec_init)]
+
 use anyhow::{anyhow, Context, Result};
 use smallvec::SmallVec;
 use std::{collections::BTreeMap, ops::Range};

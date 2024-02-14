@@ -84,7 +84,8 @@ impl Connection {
             });
 
             let rx = rx.then({
-                let killed = killed;
+                // we may only need such a simple sentence, instead of `let killed = killed`
+                let _ = killed;
                 let executor = executor.clone();
                 move |msg| {
                     let killed = killed.clone();

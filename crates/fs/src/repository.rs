@@ -256,8 +256,8 @@ pub struct FakeGitRepositoryState {
 }
 
 impl FakeGitRepository {
-    pub fn open(state: Arc<Mutex<FakeGitRepositoryState>>) -> Arc<Mutex<dyn GitRepository>> {
-        Arc::new(Mutex::new(FakeGitRepository { state }))
+    pub fn open(state: Arc<Mutex<FakeGitRepositoryState>>) -> Arc<Mutex<Box<dyn GitRepository>>> {
+        Arc::new(Mutex::new(Box::new(FakeGitRepository { state })))
     }
 }
 

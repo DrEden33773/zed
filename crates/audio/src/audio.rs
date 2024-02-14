@@ -43,6 +43,12 @@ struct GlobalAudio(Audio);
 
 impl Global for GlobalAudio {}
 
+impl Default for Audio {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Audio {
     pub fn new() -> Self {
         Self {

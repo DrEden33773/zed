@@ -57,7 +57,8 @@ pub struct StringMatch {
 }
 
 impl StringMatch {
-    pub fn ranges<'a>(&'a self) -> impl 'a + Iterator<Item = Range<usize>> {
+    #[allow(clippy::never_loop)]
+    pub fn ranges(&self) -> impl '_ + Iterator<Item = Range<usize>> {
         let mut positions = self.positions.iter().peekable();
         iter::from_fn(move || {
             while let Some(start) = positions.next().copied() {

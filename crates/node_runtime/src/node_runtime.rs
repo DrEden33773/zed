@@ -49,6 +49,7 @@ pub struct RealNodeRuntime {
 }
 
 impl RealNodeRuntime {
+    #[allow(clippy::new_ret_no_self)]
     pub fn new(http: Arc<dyn HttpClient>) -> Arc<dyn NodeRuntime> {
         Arc::new(RealNodeRuntime {
             http,
@@ -226,7 +227,7 @@ impl NodeRuntime for RealNodeRuntime {
         packages: &[(&str, &str)],
     ) -> Result<()> {
         let packages: Vec<_> = packages
-            .into_iter()
+            .iter()
             .map(|(name, version)| format!("{name}@{version}"))
             .collect();
 
@@ -249,6 +250,7 @@ impl NodeRuntime for RealNodeRuntime {
 pub struct FakeNodeRuntime;
 
 impl FakeNodeRuntime {
+    #[allow(clippy::new_ret_no_self)]
     pub fn new() -> Arc<dyn NodeRuntime> {
         Arc::new(Self)
     }

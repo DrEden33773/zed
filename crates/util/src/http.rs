@@ -110,6 +110,7 @@ impl HttpClient for isahc::HttpClient {
 }
 
 #[cfg(feature = "test-support")]
+#[allow(clippy::type_complexity)]
 pub struct FakeHttpClient {
     handler: Box<
         dyn 'static

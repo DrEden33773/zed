@@ -31,16 +31,24 @@ pub struct StoryColor {
     pub link: Hsla,
 }
 
+impl Default for StoryColor {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl StoryColor {
     pub fn new() -> Self {
         Self {
             primary: hsla(216. / 360., 11. / 100., 0. / 100., 1.),
             secondary: hsla(216. / 360., 11. / 100., 16. / 100., 1.),
             border: hsla(216. / 360., 11. / 100., 91. / 100., 1.),
-            background: hsla(0. / 360., 0. / 100., 100. / 100., 1.),
+            // background: hsla(0. / 360., 0. / 100., 100. / 100., 1.),
+            background: hsla(0. / 360., 0. / 100., 1., 1.),
             card_background: hsla(0. / 360., 0. / 100., 96. / 100., 1.),
             divider: hsla(216. / 360., 11. / 100., 86. / 100., 1.),
-            link: hsla(206. / 360., 100. / 100., 50. / 100., 1.),
+            // link: hsla(206. / 360., 100. / 100., 50. / 100., 1.),
+            link: hsla(206. / 360., 1., 50. / 100., 1.),
         }
     }
 }
@@ -336,6 +344,12 @@ impl RenderOnce for StoryItem {
 pub struct StorySection {
     description: Option<SharedString>,
     children: SmallVec<[AnyElement; 2]>,
+}
+
+impl Default for StorySection {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl StorySection {
